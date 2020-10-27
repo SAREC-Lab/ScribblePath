@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tuple/tuple.dart';
 
 void main() {
   runApp(MyApp());
@@ -55,8 +56,8 @@ class Path extends CustomPainter {
   List<Offset> points;
   Path({this.points});
 
-  Color color = Colors.blue;
-  double strokeWidth = 4;
+  Color color = Colors.red;
+  double strokeWidth = 10;
   StrokeCap strokeType = StrokeCap.round;
 
   @override
@@ -79,34 +80,33 @@ class Path extends CustomPainter {
 
 class _MyHomePageState extends State<MyHomePage> {
   int scale = 12; //Scale of Screen
-  double startX = 0;
-  double startY = 0;
-  int dx = 0;
-  int dy = 0;
-  List data = [];
-  List<Offset> points = [];
+  // double startX = 0;
+  // double startY = 0;
+  // int dx = 0;
+  // int dy = 0;
+  List<Tuple2<int, int>> dataPts = [];
+  List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
     setState(() {
-      this.points = [];
-      points.add(details.localPosition);
+      Offset screenPt = details.localPosition;
 
-      // RenderBox renderBox = context.findRenderObject();
-      // points.add(renderBox.globalToLocal(details.globalPosition));
-      // startX = details.globalPosition.dx;
-      // startY = details.globalPosition.dy;
-      // this.dx = 0;
-      // this.dy = 0;
-      // this.data = ["$dx:$dy"];
+      this.screenPts = [screenPt];
+      this.dataPts = [Tuple2(0, 0)];
     });
   }
 
   void _onPanUpdateHandler(DragUpdateDetails details) {
     setState(() {
-      points.add(details.localPosition);
-      // this.dx = ((startX - details.globalPosition.dx) / scale).floor();
-      // this.dy = ((startY - details.globalPosition.dy) / scale).floor();
-      // this.data.add("$dx:$dy");
+      Offset screenPt = details.localPosition;
+      this.screenPts.add(screenPt);
+
+      Offset startPt = screenPts[0];
+      int x = ((startPt.dx - screenPt.dx) / scale).floor();
+      int y = ((startPt.dy - screenPt.dy) / scale).floor();
+      Tuple2<int, int> dataPt = Tuple2(x, y);
+
+      this.dataPts.add(dataPt);
     });
   }
 
@@ -134,12 +134,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                     Center(
                         child: Text(
-                      // "$dx, $dy\n $data",
-                      "$points",
+                      "$dataPts",
                       style: TextStyle(color: Colors.white),
                     )),
                     CustomPaint(
-                        size: Size.infinite, painter: Path(points: points))
+                        size: Size.infinite, painter: Path(points: screenPts))
                   ],
                 ))));
   }
