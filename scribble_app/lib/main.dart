@@ -56,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double startY = 0;
   int dx = 0;
   int dy = 0;
+  var data = [];
 
   void _onPanStartHandler(DragStartDetails details) {
     setState(() {
@@ -63,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       startY = details.globalPosition.dy;
       this.dx = 0;
       this.dy = 0;
+      this.data = ["$dx:$dy"];
     });
   }
 
@@ -70,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       this.dx = ((startX - details.globalPosition.dx) / scale).floor();
       this.dy = ((startY - details.globalPosition.dy) / scale).floor();
+      this.data.add("$dx:$dy");
     });
   }
 
@@ -94,7 +97,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // ),
             body: Center(
                 child: Text(
-              "$dx, $dy",
+              "$dx, $dy\n $data",
               style: TextStyle(color: Colors.white),
             ))));
   }
