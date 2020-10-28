@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tuple/tuple.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(MyApp());
@@ -80,14 +81,11 @@ class Path extends CustomPainter {
 
 class _MyHomePageState extends State<MyHomePage> {
   int scale = 12; //Scale of Screen
-  // double startX = 0;
-  // double startY = 0;
-  // int dx = 0;
-  // int dy = 0;
   List<Tuple2<int, int>> dataPts = [];
   List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
+    _sendLocations(dataPts);
     setState(() {
       Offset screenPt = details.localPosition;
 
@@ -108,6 +106,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
       this.dataPts.add(dataPt);
     });
+  }
+
+  void _sendLocations(dataPts) async {
+    if (dataPts.length == 0) {
+      return;
+    }
+
+    http.Client client = http.Client();
+    String url = 'http://[::]:8000/';
+
+    try {
+      http.Response uriResponse =
+          await client.post(url, body: {'locations': '$dataPts'});
+      print(uriResponse.statusCode);
+    } finally {
+      client.close();
+    }
   }
 
   @override
