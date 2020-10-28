@@ -113,16 +113,15 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    http.Client client = http.Client();
-    String url = 'http://[::]:8000/';
+    String url = 'http://localhost:8080/';
 
-    try {
-      http.Response uriResponse =
-          await client.post(url, body: {'locations': '$dataPts'});
-      print(uriResponse.statusCode);
-    } finally {
-      client.close();
-    }
+    http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: '$dataPts',
+    );
   }
 
   @override
