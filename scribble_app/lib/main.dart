@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Canvas'),
+      home: MyHomePage(title: 'ScribblePath'),
     );
   }
 }
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
-    _sendLocations(dataPts);
+    //_sendLocations(dataPts);
     setState(() {
       Offset screenPt = details.localPosition;
 
@@ -82,6 +82,14 @@ class _MyHomePageState extends State<MyHomePage> {
       Tuple2<int, int> dataPt = Tuple2(x, y);
 
       this.dataPts.add(dataPt);
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      print("called setState() in _reset()");
+      this.screenPts = [];
+      this.dataPts = [Tuple2(0,0)];
     });
   }
 
@@ -147,6 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   print("start pressed");
+                  _sendLocations(dataPts);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.grey[500],
@@ -163,6 +172,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ElevatedButton(
                 onPressed: () {
                   print("reset pressed");
+                  _reset();
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.grey[500],
