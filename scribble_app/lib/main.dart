@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               ElevatedButton(
                 onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "STOP",
                   style: TextStyle(color: Colors.white),
@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "START",
                   style: TextStyle(color: Colors.white),
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               ElevatedButton(
                 onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "RESET",
                   style: TextStyle(color:Colors.white),
