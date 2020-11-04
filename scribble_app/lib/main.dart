@@ -122,6 +122,41 @@ class _MyHomePageState extends State<MyHomePage> {
                     CustomPaint(
                         size: Size.infinite, painter: Path(points: screenPts))
                   ],
-                ))));
+                ))
+        ),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.grey[700],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ElevatedButton(
+                onPressed: null,
+                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                child: Text(
+                  "STOP",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: null,
+                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                child: Text(
+                  "START",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: null,
+                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                child: Text(
+                  "RESET",
+                  style: TextStyle(color:Colors.white),
+                ),
+              )
+            ],
+          )
+        ),
+    );
   }
 }
+
