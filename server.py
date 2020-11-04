@@ -1,7 +1,6 @@
 #!/usr/bin/env python2.7
 
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import socketserver
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import json
 
 PORT = 8080
