@@ -19,6 +19,7 @@ from math import atan2, sqrt
 x = 0.0
 y = 0.0 
 theta = 0.0
+last_coords = [0,0]
 
 # Callback function
 def newOdom(msg):
@@ -66,7 +67,7 @@ def turtle(waypoints):
         dist = sqrt(inc_x**2 + inc_y**2)
         # Check whether to turn or move.
         angle_change=angle_to_goal-theta
-        if dist<.5:
+        if dist<0.1:
             speed.angular.z=0
             speed.linear.x=0
             current_goal+=1
@@ -82,7 +83,7 @@ def turtle(waypoints):
                 speed.angular.z = -0.13
         else:
             rospy.loginfo("Ready to move")
-            speed.linear.x = dist*0.05+.025
+            speed.linear.x = dist*.05+.025
             speed.angular.z = 0.0
         
         print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
@@ -92,7 +93,6 @@ def turtle(waypoints):
 
 # Server Class
 class Handler(BaseHTTPRequestHandler):
-    last_coords = [0,0]
 
     def _set_response(self):
         self.send_response(200)
@@ -103,17 +103,19 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
     def do_POST(self):
+        global last_coords
+        
         content_length = int(self.headers['Content-Length']) # Size of Data
         data = self.rfile.read(content_length).decode('utf-8') # Data
         coords = json.loads(data)
         print("Before Loop {}".format(coords))
         for c in coords:
-            c[0] += self.last_coords[0]
-            c[1] += self.last_coords[1]
+            c[0] += last_coords[0]
+            c[1] += last_coords[1]
         
-        print("Coords {}, Last: {}".format(coords,self.last_coords))
+        print("Coords {}, Last: {}".format(coords,last_coords))
         turtle(coords)
-        self.last_coords = coords[-1]
+        last_coords = coords[-1]
 
 
         self._set_response()
