@@ -130,27 +130,50 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+                onPressed: () {
+                  print("stop pressed");
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ),   
                 child: Text(
                   "STOP",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
               ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+                onPressed: () {
+                  print("start pressed");
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ), 
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "START",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
               ElevatedButton(
-                onPressed: null,
-                style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+                onPressed: () {
+                  print("reset pressed");
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ), 
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "RESET",
-                  style: TextStyle(color:Colors.white),
+                  style: TextStyle(color:Colors.black),
                 ),
               )
             ],
