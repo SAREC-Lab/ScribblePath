@@ -20,6 +20,8 @@ x = 0.0
 y = 0.0 
 theta = 0.0
 last_coords = [0,0]
+stop=False
+t1=None
 
 # Callback function
 def newOdom(msg):
@@ -54,7 +56,7 @@ def turtle(waypoints):
     goal.y=waypoints[current_goal][1]
     # Strategy is to first turn to face the target coordinates
     # and then move towards them
-    while not rospy.is_shutdown() and current_goal < len(waypoints):
+    while not rospy.is_shutdown() and current_goal < len(waypoints) and not stop:
 
         # Compute difference between current position and target position
         inc_x = goal.x -x
@@ -104,7 +106,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         global last_coords
-        
+        global stop
+        global t1
+        if t1 is not None:
+            stop=True
+            t1.join()
         content_length = int(self.headers['Content-Length']) # Size of Data
         data = self.rfile.read(content_length).decode('utf-8') # Data
         coords = json.loads(data)
@@ -114,6 +120,11 @@ class Handler(BaseHTTPRequestHandler):
             c[1] += last_coords[1]
         
         print("Coords {}, Last: {}".format(coords,last_coords))
+        stop=False
+        #turtle(coords)
+        #thread.start_new_thread (turtle, coords)
+        t1 = threading.Thread(target = turtle, args = (coords,)) 
+        t1.start()
         turtle(coords)
         last_coords = coords[-1]
 
@@ -133,6 +144,7 @@ def run(server_class=HTTPServer, handler_class=Handler, port=PORT):
         pass
     httpd.server_close()
     print('Stopping server...\n')
+    stop=True
 
 if __name__ == '__main__':
     run()
