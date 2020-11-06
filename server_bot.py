@@ -1,15 +1,14 @@
 #!/usr/bin/env python2.7
 
 #Server imports
-# from http.server import BaseHTTPRequestHandler, HTTPServer
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
-# import socketserver
 import json
+import threading
+import thread
 
 PORT = 8080
 
 #turtlebot imports
-
 import rospy
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
@@ -19,9 +18,9 @@ from math import atan2, sqrt
 x = 0.0
 y = 0.0 
 theta = 0.0
-last_coords = [0,0]
+last_coords = [0,0]]
+turtle_thread = None
 stop=False
-t1=None
 
 # Callback function
 def newOdom(msg):
@@ -34,20 +33,25 @@ def newOdom(msg):
     rot_q = msg.pose.pose.orientation
     (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w])
 
+# Initialize mode
+rospy.init_node("speed_controller")
+
+# Subscribe to the odom topic to get information about the current position and velocity
+# of the robot
+sub = rospy.Subscriber("/odom", Odometry, newOdom)
+
+# Publish linear and angular velocities to cmd_vel topic
+pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
+
+speed = Twist()
+
+rate = rospy.Rate(4)
+
 def turtle(waypoints): 
-    # Initialize mode
-    rospy.init_node("speed_controller")
-
-    # Subscribe to the odom topic to get information about the current position and velocity
-    # of the robot
-    sub = rospy.Subscriber("/odom", Odometry, newOdom)
-
-    # Publish linear and angular velocities to cmd_vel topic
-    pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
-
-    speed = Twist()
-
-    r = rospy.Rate(4)
+    global sub
+    global pub
+    global speed
+    global rate
 
     # Establish target coordinates
     goal = Point()
@@ -88,14 +92,12 @@ def turtle(waypoints):
             speed.linear.x = dist*.05+.025
             speed.angular.z = 0.0
         
-        print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
+        #print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
         pub.publish(speed)
-        r.sleep()
-
+        rate.sleep()
 
 # Server Class
 class Handler(BaseHTTPRequestHandler):
-
     def _set_response(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -107,27 +109,28 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         global last_coords
         global stop
-        global t1
-        if t1 is not None:
-            stop=True
-            t1.join()
+        global turtle_thread
+        global thread_arr
+        
         content_length = int(self.headers['Content-Length']) # Size of Data
         data = self.rfile.read(content_length).decode('utf-8') # Data
         coords = json.loads(data)
-        print("Before Loop {}".format(coords))
-        for c in coords:
-            c[0] += last_coords[0]
-            c[1] += last_coords[1]
-        
-        print("Coords {}, Last: {}".format(coords,last_coords))
-        stop=False
-        #turtle(coords)
-        #thread.start_new_thread (turtle, coords)
-        t1 = threading.Thread(target = turtle, args = (coords,)) 
-        t1.start()
-        turtle(coords)
-        last_coords = coords[-1]
 
+        if turtle_thread != None:
+            if not turtle_thread.is_alive():
+                turtle_thread = None
+            else:
+                print("Bot already running")
+
+        if not turtle_thread:
+            for c in coords:
+                c[0] += last_coords[0]
+                c[1] += last_coords[1]
+            
+            turtle_thread = threading.Thread(target = turtle, args = (coords,)) 
+            turtle_thread.start()
+            last_coords = coords[-1]
+        
 
         self._set_response()
         self.wfile.write("Recieved".encode('utf-8'))
