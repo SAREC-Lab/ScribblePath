@@ -18,7 +18,7 @@ from math import atan2, sqrt
 x = 0.0
 y = 0.0 
 theta = 0.0
-last_coords = [0,0]]
+last_coords = [0,0]
 turtle_thread = None
 stop=False
 
@@ -81,16 +81,66 @@ def turtle(waypoints):
                 goal.x=waypoints[current_goal][0]
                 goal.y=waypoints[current_goal][1]
 
-        elif abs(angle_change) > 0.1:
+        elif abs(angle_change) > 0.25:
             #speed.linear.x = 0.0
             if angle_change > 0:
-                speed.angular.z = 0.13
+                speed.angular.z = 0.15
+
+                if angle_change > pi/8:
+                    speed.angular.z = 0.35
+
+                if angle_change > pi/4:
+                    speed.angular.z = 0.55
+
+                if angle_change > pi/2:
+                    speed.angular.z = 0.75
+
+                if angle_change > 3*pi/4:
+                    speed.angular.z = 0.95
+
+                if angle_change > 3*pi/4 + ((3*pi/4) + pi)/2:
+                    speed.angular.z = 1.15
             else:
-                speed.angular.z = -0.13
+                speed.angular.z = -0.15
+
+                if angle_change < -pi/8:
+                    speed.angular.z = -0.35
+
+                if angle_change < -pi/4:
+                    speed.angular.z = -0.55
+
+                if angle_change < -pi/2:
+                    speed.angular.z = -0.75
+
+                if angle_change < -3*pi/4:
+                    speed.angular.z = -0.95
+
+                if angle_change < -(3*pi/4 + ((3*pi/4) + pi)/2):
+                    speed.angular.z = -1.15
         else:
-            rospy.loginfo("Ready to move")
-            speed.linear.x = dist*.05+.025
             speed.angular.z = 0.0
+
+            rospy.loginfo("Ready to move")
+        
+            speed.linear.x = 0.075
+    
+            if dist > 0.25:
+                speed.linear.x = 0.1
+
+            if dist > 0.50:
+                speed.linear.x = 0.125
+
+            if dist > 0.75:
+                speed.linear.x = 0.150
+            
+            if dist > 1:
+                speed.linear.x = 0.175
+            
+            if dist > 1.25:
+                speed.linear.x = 0.2
+            
+            if dist > 1.5:
+                speed.linear.x = 2.25
         
         #print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
         pub.publish(speed)
