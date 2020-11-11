@@ -9,9 +9,22 @@ from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
 from math import atan2, sqrt, pi
 
+from sensor_msgs.msg import LaserScan
+
 x = 0.0
 y = 0.0 
 theta = 0.0
+
+stop = False
+
+# Initialize mode
+rospy.init_node("speed_controller")
+# rospy.init_node('obstacle_avoidance_node')
+
+# Publish linear and angular velocities to cmd_vel topic
+pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
+
+speed = Twist()
 
 # Callback function
 def newOdom(msg):
@@ -24,18 +37,36 @@ def newOdom(msg):
     rot_q = msg.pose.pose.orientation
     (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w])
 
+def obstacle_detection_callback(dt):
+    global stop
+    global pub
+
+    print '-------------------------------------------'
+    print 'Range data at 0 deg:   {}'.format(dt.ranges[0])
+    print 'Range data at 15 deg:  {}'.format(dt.ranges[15])
+    print 'Range data at 345 deg: {}'.format(dt.ranges[345])
+    print '-------------------------------------------'
+
+    # Thresholds
+    thr1 = 0.3
+    thr2 = 0.3
+
+    # Checks if obstacles in front and 15 deg left and right
+    if not (dt.ranges[0] > thr1 and dt.ranges[15] > thr2 and dt.ranges[345] > thr2):
+        speed.linear.x = 0.0
+        speed.angular.z = 0.0
+        stop = True
+        print("OBSTACLE!!!")
+
+    pub.publish(speed)
+
+# Subscribe to the odom topic to get information about the current position and velocity
+# of the robot
+sub = rospy.Subscriber("/odom", Odometry, newOdom)
+sub1 = rospy.Subscriber("/scan", LaserScan, obstacle_detection_callback)
+
 def turtle(waypoints):
-    # Initialize mode
-    rospy.init_node("speed_controller")
-
-    # Subscribe to the odom topic to get information about the current position and velocity
-    # of the robot
-    sub = rospy.Subscriber("/odom", Odometry, newOdom)
-
-    # Publish linear and angular velocities to cmd_vel topic
-    pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
-
-    speed = Twist()
+    global stop
 
     r = rospy.Rate(4)
 
@@ -47,7 +78,7 @@ def turtle(waypoints):
     goal.y=waypoints[current_goal][1]
     # Strategy is to first turn to face the target coordinates
     # and then move towards them
-    while not rospy.is_shutdown():
+    while not rospy.is_shutdown() and not stop:
 
         # Compute difference between current position and target position
         inc_x = goal.x -x
