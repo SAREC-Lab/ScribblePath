@@ -59,7 +59,7 @@ class Path extends CustomPainter {
 String url = 'http://172.16.1.146:8080';
 
 class _MyHomePageState extends State<MyHomePage> {
-  int scale = 12; //Scale of Screen
+  int scale = 50; //Scale of Screen
   List<Tuple2<int, int>> dataPts = [];
   List<Offset> screenPts = [];
 
@@ -225,6 +225,7 @@ class _IP_PageState extends State<IP_Page> {
   void initState() {
     super.initState();
     _focusNode.addListener(() {
+
       print("Has focus: ${_focusNode.hasFocus}");
     });
   }
@@ -247,10 +248,15 @@ class _IP_PageState extends State<IP_Page> {
               textInputAction: TextInputAction.send,
               decoration: InputDecoration(
                 labelText: "IP Address",
-                hintStyle: TextStyle(
-                  color: Colors.white,
+                labelStyle: TextStyle(color: Colors.white),
+                //hintText: "IP Address",
+                // hintStyle: TextStyle(
+                //   decorationColor: Colors.white,
+                //   color: Colors.white,
+                // ),
+                border: OutlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.white),
                 ),
-                border: OutlineInputBorder(),
                 // suffixIcon: IconButton(
                 //   icon: Icon(Icons.send),
                 //   onPressed: 
