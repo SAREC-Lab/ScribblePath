@@ -70,65 +70,64 @@ def turtle(waypoints):
         elif abs(angle_change) > 0.25:
             #speed.linear.x = 0.0
             if angle_change > 0:
-                speed.angular.z = 0.15
+                speed.angular.z = 0.50
 
                 if angle_change > pi/8:
-                    speed.angular.z = 0.35
-
-                if angle_change > pi/4:
-                    speed.angular.z = 0.55
-
-                if angle_change > pi/2:
                     speed.angular.z = 0.75
 
+                if angle_change > pi/4:
+                    speed.angular.z = 1.00
+
+                if angle_change > pi/2:
+                    speed.angular.z = 1.25
+
                 if angle_change > 3*pi/4:
-                    speed.angular.z = 0.95
+                    speed.angular.z = 1.50
 
                 if angle_change > 3*pi/4 + ((3*pi/4) + pi)/2:
-                    speed.angular.z = 1.15
+                    speed.angular.z = 1.75
             else:
-                speed.angular.z = -0.15
+                speed.angular.z = -0.50
 
                 if angle_change < -pi/8:
-                    speed.angular.z = -0.35
-
-                if angle_change < -pi/4:
-                    speed.angular.z = -0.55
-
-                if angle_change < -pi/2:
                     speed.angular.z = -0.75
 
+                if angle_change < -pi/4:
+                    speed.angular.z = -1.00
+
+                if angle_change < -pi/2:
+                    speed.angular.z = -1.25
+
                 if angle_change < -3*pi/4:
-                    speed.angular.z = -0.95
+                    speed.angular.z = -1.50
 
                 if angle_change < -(3*pi/4 + ((3*pi/4) + pi)/2):
-                    speed.angular.z = -1.15
+                    speed.angular.z = -1.70
         else:
             speed.angular.z = 0.0
 
             rospy.loginfo("Ready to move")
         
-            speed.linear.x = 0.075
+            speed.linear.x = 0.300
     
             if dist > 0.25:
-                speed.linear.x = 0.1
+                speed.linear.x = 0.350
 
             if dist > 0.50:
-                speed.linear.x = 0.125
+                speed.linear.x = 0.400
 
             if dist > 0.75:
-                speed.linear.x = 0.150
+                speed.linear.x = 0.450
             
             if dist > 1:
-                speed.linear.x = 0.175
+                speed.linear.x = 0.500
             
             if dist > 1.25:
-                speed.linear.x = 0.2
+                speed.linear.x = 0.550
             
             if dist > 1.5:
-                speed.linear.x = 2.25
+                speed.linear.x = 0.600
 
-            
             # speed.linear.x = dist*0.05+.025
             # speed.angular.z = 0.0
         
@@ -136,7 +135,7 @@ def turtle(waypoints):
         r.sleep()
 
 def main():
-    waypoints = [[1,1], [2,0], [3,1], [4,0]]
+    waypoints = [[1,1], [1,1.1], [1,1.2], [2,0], [3,1], [4,0]]
     turtle(waypoints)
 
 if __name__ == "__main__":

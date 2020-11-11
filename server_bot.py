@@ -80,71 +80,73 @@ def turtle(waypoints):
             if current_goal < len(waypoints):
                 goal.x=waypoints[current_goal][0]
                 goal.y=waypoints[current_goal][1]
-
         elif abs(angle_change) > 0.25:
-            #speed.linear.x = 0.0
-            if angle_change > 0:
-                speed.angular.z = 0.15
+                    #speed.linear.x = 0.0
+                    if angle_change > 0:
+                        speed.angular.z = 0.50
 
-                if angle_change > pi/8:
-                    speed.angular.z = 0.35
+                        if angle_change > pi/8:
+                            speed.angular.z = 0.75
 
-                if angle_change > pi/4:
-                    speed.angular.z = 0.55
+                        if angle_change > pi/4:
+                            speed.angular.z = 1.00
 
-                if angle_change > pi/2:
-                    speed.angular.z = 0.75
+                        if angle_change > pi/2:
+                            speed.angular.z = 1.25
 
-                if angle_change > 3*pi/4:
-                    speed.angular.z = 0.95
+                        if angle_change > 3*pi/4:
+                            speed.angular.z = 1.50
 
-                if angle_change > 3*pi/4 + ((3*pi/4) + pi)/2:
-                    speed.angular.z = 1.15
-            else:
-                speed.angular.z = -0.15
+                        if angle_change > 3*pi/4 + ((3*pi/4) + pi)/2:
+                            speed.angular.z = 1.75
+                    else:
+                        speed.angular.z = -0.50
 
-                if angle_change < -pi/8:
-                    speed.angular.z = -0.35
+                        if angle_change < -pi/8:
+                            speed.angular.z = -0.75
 
-                if angle_change < -pi/4:
-                    speed.angular.z = -0.55
+                        if angle_change < -pi/4:
+                            speed.angular.z = -1.00
 
-                if angle_change < -pi/2:
-                    speed.angular.z = -0.75
+                        if angle_change < -pi/2:
+                            speed.angular.z = -1.25
 
-                if angle_change < -3*pi/4:
-                    speed.angular.z = -0.95
+                        if angle_change < -3*pi/4:
+                            speed.angular.z = -1.50
 
-                if angle_change < -(3*pi/4 + ((3*pi/4) + pi)/2):
-                    speed.angular.z = -1.15
-        else:
-            speed.angular.z = 0.0
+                        if angle_change < -(3*pi/4 + ((3*pi/4) + pi)/2):
+                            speed.angular.z = -1.70
+                else:
+                    speed.angular.z = 0.0
 
-            rospy.loginfo("Ready to move")
-        
-            speed.linear.x = 0.075
-    
-            if dist > 0.25:
-                speed.linear.x = 0.1
-
-            if dist > 0.50:
-                speed.linear.x = 0.125
-
-            if dist > 0.75:
-                speed.linear.x = 0.150
+                    rospy.loginfo("Ready to move")
+                
+                    speed.linear.x = 0.300
             
-            if dist > 1:
-                speed.linear.x = 0.175
-            
-            if dist > 1.25:
-                speed.linear.x = 0.2
-            
-            if dist > 1.5:
-                speed.linear.x = 2.25
-        
-        #print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
-        pub.publish(speed)
-        rate.sleep()
+                    if dist > 0.25:
+                        speed.linear.x = 0.350
+
+                    if dist > 0.50:
+                        speed.linear.x = 0.400
+
+                    if dist > 0.75:
+                        speed.linear.x = 0.450
+                    
+                    if dist > 1:
+                        speed.linear.x = 0.500
+                    
+                    if dist > 1.25:
+                        speed.linear.x = 0.550
+                    
+                    if dist > 1.5:
+                        speed.linear.x = 0.600
+
+                    # speed.linear.x = dist*0.05+.025
+                    # speed.angular.z = 0.0
+                
+                pub.publish(speed)
+                r.sleep()
+                
 
 # Server Class
 class Handler(BaseHTTPRequestHandler):
