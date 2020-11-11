@@ -14,13 +14,14 @@ from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
 from math import atan2, sqrt
+from sensor_msgs.msg import LaserScan
 
 x = 0.0
 y = 0.0 
 theta = 0.0
 last_coords = [0,0]
 turtle_thread = None
-stop=False
+stop = False
 
 # Callback function
 def newOdom(msg):
@@ -32,6 +33,43 @@ def newOdom(msg):
     y = msg.pose.pose.position.y
     rot_q = msg.pose.pose.orientation
     (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w])
+
+def obstacle_detection_callback(dt):
+    global stop
+    global pub
+
+    print '-------------------------------------------'
+    print 'Range data at 0 deg:   {}'.format(dt.ranges[0])
+    print 'Range data at 15 deg:  {}'.format(dt.ranges[15])
+    print 'Range data at 345 deg: {}'.format(dt.ranges[345])
+    print '-------------------------------------------'
+
+    # Thresholds
+    thr1 = 0.3
+    thr2 = 0.3
+
+    # Checks if obstacles in front and 15 deg left and right
+    if not (dt.ranges[0] > thr1 and dt.ranges[15] > thr2 and dt.ranges[345] > thr2):
+        speed.linear.x = 0.0
+        speed.angular.z = 0.0
+        stop = True
+        print("OBSTACLE!!!")
+
+    pub.publish(speed)
+
+# Initialize mode
+rospy.init_node("speed_controller")
+# rospy.init_node('obstacle_avoidance_node')
+
+# Publish linear and angular velocities to cmd_vel topic
+pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
+
+# Subscribe to the odom topic to get information about the current position and velocity
+# of the robot
+sub = rospy.Subscriber("/odom", Odometry, newOdom)
+sub1 = rospy.Subscriber("/scan", LaserScan, obstacle_detection_callback)
+
+speed = Twist()
 
 # Initialize mode
 rospy.init_node("speed_controller")
@@ -47,12 +85,9 @@ speed = Twist()
 
 rate = rospy.Rate(4)
 
-def turtle(waypoints): 
-    global sub
-    global pub
-    global speed
-    global rate
-
+def turtle(waypoints):
+    global stop
+    
     # Establish target coordinates
     goal = Point()
     current_goal=0
@@ -84,63 +119,63 @@ def turtle(waypoints):
         elif abs(angle_change) > 0.25:
             #speed.linear.x = 0.0
             if angle_change > 0:
-                speed.angular.z = 0.15
+                speed.angular.z = 0.50
 
                 if angle_change > pi/8:
-                    speed.angular.z = 0.35
-
-                if angle_change > pi/4:
-                    speed.angular.z = 0.55
-
-                if angle_change > pi/2:
                     speed.angular.z = 0.75
 
+                if angle_change > pi/4:
+                    speed.angular.z = 1.00
+
+                if angle_change > pi/2:
+                    speed.angular.z = 1.25
+
                 if angle_change > 3*pi/4:
-                    speed.angular.z = 0.95
+                    speed.angular.z = 1.50
 
                 if angle_change > 3*pi/4 + ((3*pi/4) + pi)/2:
-                    speed.angular.z = 1.15
+                    speed.angular.z = 1.75
             else:
-                speed.angular.z = -0.15
+                speed.angular.z = -0.50
 
                 if angle_change < -pi/8:
-                    speed.angular.z = -0.35
-
-                if angle_change < -pi/4:
-                    speed.angular.z = -0.55
-
-                if angle_change < -pi/2:
                     speed.angular.z = -0.75
 
+                if angle_change < -pi/4:
+                    speed.angular.z = -1.00
+
+                if angle_change < -pi/2:
+                    speed.angular.z = -1.25
+
                 if angle_change < -3*pi/4:
-                    speed.angular.z = -0.95
+                    speed.angular.z = -1.50
 
                 if angle_change < -(3*pi/4 + ((3*pi/4) + pi)/2):
-                    speed.angular.z = -1.15
+                    speed.angular.z = -1.75
         else:
             speed.angular.z = 0.0
 
             rospy.loginfo("Ready to move")
         
-            speed.linear.x = 0.075
+            speed.linear.x = 0.300
     
             if dist > 0.25:
-                speed.linear.x = 0.1
+                speed.linear.x = 0.350
 
             if dist > 0.50:
-                speed.linear.x = 0.125
+                speed.linear.x = 0.400
 
             if dist > 0.75:
-                speed.linear.x = 0.150
+                speed.linear.x = 0.450
             
             if dist > 1:
-                speed.linear.x = 0.175
+                speed.linear.x = 0.500
             
             if dist > 1.25:
-                speed.linear.x = 0.2
+                speed.linear.x = 0.550
             
             if dist > 1.5:
-                speed.linear.x = 2.25
+                speed.linear.x = 0.600
         
         #print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
         pub.publish(speed)
