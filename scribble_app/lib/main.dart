@@ -56,6 +56,8 @@ class Path extends CustomPainter {
   bool shouldRepaint(Path oldDelegate) => true;
 }
 
+String url = 'http://localhost:8080/';
+
 class _MyHomePageState extends State<MyHomePage> {
   int scale = 12; //Scale of Screen
   List<Tuple2<int, int>> dataPts = [];
@@ -98,7 +100,6 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    String url = 'http://localhost:8080/';
     print(dataPts);
     http.post(
       url,
@@ -131,6 +132,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         size: Size.infinite, painter: Path(points: screenPts))
                   ],
                 ))
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => IP_Page()),
+            );
+          },
+          label: Text("Enter IP"),
+          icon: Icon(Icons.create),
+          backgroundColor: Colors.red,
         ),
         bottomNavigationBar: BottomAppBar(
           color: Colors.grey[700],
@@ -193,3 +205,67 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class IP_Page extends StatefulWidget {
+  IP_Page({Key key, this.title}) : super(key: key);
+  final String title;
+
+  @override
+  _IP_PageState createState() => _IP_PageState();
+}
+
+class _IP_PageState extends State<IP_Page> {
+  
+ final _focusNode = FocusNode();
+    
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        color: Colors.grey[900],
+          child: Center(
+            child: TextField(
+              focusNode: _focusNode,
+              autocorrect: false,
+              textInputAction: TextInputAction.send,
+              decoration: InputDecoration(
+                labelText: "IP Address",
+                hintStyle: TextStyle(
+                  color: Colors.white,
+                ),
+                border: OutlineInputBorder(),
+                // suffixIcon: IconButton(
+                //   icon: Icon(Icons.send),
+                //   onPressed: 
+                // ),
+              ),
+              // keyboardType: TextInputType.numberWithOptions(
+              //   decimal: true,
+              // ),
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              onSubmitted: (text) {
+                url = "http://$text/";
+                print("ip address submitted: $text");
+                Navigator.pop(context);
+              }
+            ),
+          ),
+        )
+      );
+  }
+}
