@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Canvas'),
+      home: MyHomePage(title: 'ScribblePath'),
     );
   }
 }
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
-    _sendLocations(dataPts);
+    //_sendLocations(dataPts);
     setState(() {
       Offset screenPt = details.localPosition;
 
@@ -86,6 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if (dataPt != dataPts[dataPts.length - 1]) {
         this.dataPts.add(dataPt);
       }
+    });
+  }
+
+  void _reset() {
+    setState(() {
+      print("called setState() in _reset()");
+      this.screenPts = [];
+      this.dataPts = [Tuple2(0, 0)];
     });
   }
 
@@ -133,27 +141,52 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               ElevatedButton(
-                onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                onPressed: () {
+                  print("stop pressed");
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ),
                 child: Text(
                   "STOP",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
               ElevatedButton(
-                onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                onPressed: () {
+                  print("start pressed");
+                  _sendLocations(dataPts);
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ),
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "START",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
               ElevatedButton(
-                onPressed: null,
-                //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
+                onPressed: () {
+                  print("reset pressed");
+                  _reset();
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.grey[500],
+                  onPrimary: Colors.grey[400],
+                  onSurface: Colors.grey[700],
+                  elevation: 3.0,
+                ),
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "RESET",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
               )
             ],
