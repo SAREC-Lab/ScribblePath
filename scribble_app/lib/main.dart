@@ -56,7 +56,7 @@ class Path extends CustomPainter {
   bool shouldRepaint(Path oldDelegate) => true;
 }
 
-String url = 'http://localhost:8080/';
+String url = 'http://172.16.1.146:8080';
 
 class _MyHomePageState extends State<MyHomePage> {
   int scale = 12; //Scale of Screen
