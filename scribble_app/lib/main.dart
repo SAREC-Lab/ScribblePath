@@ -81,7 +81,11 @@ class _MyHomePageState extends State<MyHomePage> {
       int y = ((startPt.dy - screenPt.dy) / scale).floor();
       Tuple2<int, int> dataPt = Tuple2(x, y);
 
-      this.dataPts.add(dataPt);
+      if (dataPts.isEmpty) {
+        this.dataPts.add(dataPt);
+      } else if (dataPt != dataPts[dataPts.length - 1]) {
+        this.dataPts.add(dataPt);
+      }
     });
   }
 
@@ -90,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
-    String url = 'http://localhost:8080/';
+    String url = 'http://172.16.1.146:8080/';
     print(dataPts);
     http.post(
       url,
@@ -104,27 +108,26 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: GestureDetector(
-            onPanStart: _onPanStartHandler,
-            onPanUpdate: _onPanUpdateHandler,
-            child: Container(
-                color: Colors.grey[900],
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                        child: Text(
-                      "$dataPts",
-                      style: TextStyle(color: Colors.white),
-                    )),
-                    CustomPaint(
-                        size: Size.infinite, painter: Path(points: screenPts))
-                  ],
-                ))
-        ),
-        bottomNavigationBar: BottomAppBar(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: GestureDetector(
+          onPanStart: _onPanStartHandler,
+          onPanUpdate: _onPanUpdateHandler,
+          child: Container(
+              color: Colors.grey[900],
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                      child: Text(
+                    "$dataPts",
+                    style: TextStyle(color: Colors.white),
+                  )),
+                  CustomPaint(
+                      size: Size.infinite, painter: Path(points: screenPts))
+                ],
+              ))),
+      bottomNavigationBar: BottomAppBar(
           color: Colors.grey[700],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -150,13 +153,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 //style: ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.grey[500])),
                 child: Text(
                   "RESET",
-                  style: TextStyle(color:Colors.white),
+                  style: TextStyle(color: Colors.white),
                 ),
               )
             ],
-          )
-        ),
+          )),
     );
   }
 }
-
