@@ -13,7 +13,7 @@ import rospy
 from nav_msgs.msg import Odometry
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
-from math import atan2, sqrt
+from math import atan2, sqrt, pi
 from sensor_msgs.msg import LaserScan
 
 x = 0.0
