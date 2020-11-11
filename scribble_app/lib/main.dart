@@ -83,7 +83,11 @@ class _MyHomePageState extends State<MyHomePage> {
       int y = ((startPt.dy - screenPt.dy) / scale).floor();
       Tuple2<int, int> dataPt = Tuple2(x, y);
 
-      this.dataPts.add(dataPt);
+      if (dataPts.isEmpty) {
+        this.dataPts.add(dataPt);
+      } else if (dataPt != dataPts[dataPts.length - 1]) {
+        this.dataPts.add(dataPt);
+      }
     });
   }
 
@@ -91,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       print("called setState() in _reset()");
       this.screenPts = [];
-      this.dataPts = [Tuple2(0,0)];
+      this.dataPts = [Tuple2(0, 0)];
     });
   }
 
@@ -100,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return;
     }
 
+    //String url = 'http://172.16.1.146:8080/';
     print(dataPts);
     http.post(
       url,
@@ -158,7 +163,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPrimary: Colors.grey[400],
                   onSurface: Colors.grey[700],
                   elevation: 3.0,
-                ),   
+                ),
                 child: Text(
                   "STOP",
                   style: TextStyle(color: Colors.black),
@@ -174,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPrimary: Colors.grey[400],
                   onSurface: Colors.grey[700],
                   elevation: 3.0,
-                ), 
+                ),
                 //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "START",
@@ -191,16 +196,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   onPrimary: Colors.grey[400],
                   onSurface: Colors.grey[700],
                   elevation: 3.0,
-                ), 
+                ),
                 //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
                 child: Text(
                   "RESET",
-                  style: TextStyle(color:Colors.black),
+                  style: TextStyle(color: Colors.black),
                 ),
               )
             ],
-          )
-        ),
+          )),
     );
   }
 }
