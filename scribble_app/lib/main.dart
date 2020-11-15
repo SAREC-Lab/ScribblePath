@@ -59,8 +59,8 @@ class Path extends CustomPainter {
 String url = 'http://172.16.1.146:8080';
 
 class _MyHomePageState extends State<MyHomePage> {
-  int scale = 50; //Scale of Screen
-  List<Tuple2<int, int>> dataPts = [];
+  int scale = 150; //Scale of Screen
+  List<Tuple2<double, double>> dataPts = [];
   List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
@@ -79,9 +79,9 @@ class _MyHomePageState extends State<MyHomePage> {
       this.screenPts.add(screenPt);
 
       Offset startPt = screenPts[0];
-      int x = ((startPt.dx - screenPt.dx) / scale).floor();
-      int y = ((startPt.dy - screenPt.dy) / scale).floor();
-      Tuple2<int, int> dataPt = Tuple2(x, y);
+      double x = (startPt.dx - screenPt.dx) / scale;
+      double y = (startPt.dy - screenPt.dy) / scale;
+      Tuple2<double, double> dataPt = Tuple2(x, y);
 
       if (dataPts.isEmpty) {
         this.dataPts.add(dataPt);
@@ -118,91 +118,90 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: GestureDetector(
-            onPanStart: _onPanStartHandler,
-            onPanUpdate: _onPanUpdateHandler,
-            child: Container(
-                color: Colors.grey[900],
-                child: Stack(
-                  children: <Widget>[
-                    Center(
-                        child: Text(
-                      "$dataPts",
-                      style: TextStyle(color: Colors.white),
-                    )),
-                    CustomPaint(
-                        size: Size.infinite, painter: Path(points: screenPts))
-                  ],
-                ))
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => IP_Page()),
-            );
-          },
-          label: Text("Enter IP"),
-          icon: Icon(Icons.create),
-          backgroundColor: Colors.red,
-        ),
-        bottomNavigationBar: BottomAppBar(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: GestureDetector(
+          onPanStart: _onPanStartHandler,
+          onPanUpdate: _onPanUpdateHandler,
+          child: Container(
+              color: Colors.grey[900],
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                      child: Text(
+                    "$dataPts",
+                    style: TextStyle(color: Colors.white),
+                  )),
+                  CustomPaint(
+                      size: Size.infinite, painter: Path(points: screenPts))
+                ],
+              ))),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => IP_Page()),
+          );
+        },
+        label: Text("Enter IP"),
+        icon: Icon(Icons.create),
+        backgroundColor: Colors.red,
+      ),
+      bottomNavigationBar: BottomAppBar(
           color: Colors.grey[700],
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  print("stop pressed");
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[500],
-                  onPrimary: Colors.grey[400],
-                  onSurface: Colors.grey[700],
-                  elevation: 3.0,
-                ),
-                child: Text(
-                  "STOP",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  print("start pressed");
-                  _sendLocations(dataPts);
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[500],
-                  onPrimary: Colors.grey[400],
-                  onSurface: Colors.grey[700],
-                  elevation: 3.0,
-                ),
-                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
-                child: Text(
-                  "START",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  print("reset pressed");
-                  _reset();
-                },
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey[500],
-                  onPrimary: Colors.grey[400],
-                  onSurface: Colors.grey[700],
-                  elevation: 3.0,
-                ),
-                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
-                child: Text(
-                  "RESET",
-                  style: TextStyle(color: Colors.black),
-                ),
-              )
+              // ElevatedButton(
+              //   onPressed: () {
+              //     print("stop pressed");
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     primary: Colors.grey[500],
+              //     onPrimary: Colors.grey[400],
+              //     onSurface: Colors.grey[700],
+              //     elevation: 3.0,
+              //   ),
+              //   child: Text(
+              //     "STOP",
+              //     style: TextStyle(color: Colors.black),
+              //   ),
+              // ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     print("start pressed");
+              //     _sendLocations(dataPts);
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     primary: Colors.grey[500],
+              //     onPrimary: Colors.grey[400],
+              //     onSurface: Colors.grey[700],
+              //     elevation: 3.0,
+              //   ),
+              //   //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+              //   child: Text(
+              //     "START",
+              //     style: TextStyle(color: Colors.black),
+              //   ),
+              // ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     print("reset pressed");
+              //     _reset();
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     primary: Colors.grey[500],
+              //     onPrimary: Colors.grey[400],
+              //     onSurface: Colors.grey[700],
+              //     elevation: 3.0,
+              //   ),
+              //   //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+              //   child: Text(
+              //     "RESET",
+              //     style: TextStyle(color: Colors.black),
+              //   ),
+              // )
             ],
           )),
     );
@@ -218,14 +217,12 @@ class IP_Page extends StatefulWidget {
 }
 
 class _IP_PageState extends State<IP_Page> {
-  
- final _focusNode = FocusNode();
-    
+  final _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(() {
-
       print("Has focus: ${_focusNode.hasFocus}");
     });
   }
@@ -239,43 +236,41 @@ class _IP_PageState extends State<IP_Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.grey[900],
-          child: Center(
-            child: TextField(
-              focusNode: _focusNode,
-              autocorrect: false,
-              textInputAction: TextInputAction.send,
-              decoration: InputDecoration(
-                labelText: "IP Address",
-                labelStyle: TextStyle(color: Colors.white),
-                //hintText: "IP Address",
-                // hintStyle: TextStyle(
-                //   decorationColor: Colors.white,
-                //   color: Colors.white,
-                // ),
-                border: OutlineInputBorder(
-                  //borderSide: BorderSide(color: Colors.white),
-                ),
-                // suffixIcon: IconButton(
-                //   icon: Icon(Icons.send),
-                //   onPressed: 
-                // ),
-              ),
-              // keyboardType: TextInputType.numberWithOptions(
-              //   decimal: true,
+        body: Container(
+      color: Colors.grey[900],
+      child: Center(
+        child: TextField(
+            focusNode: _focusNode,
+            autocorrect: false,
+            textInputAction: TextInputAction.send,
+            decoration: InputDecoration(
+              labelText: "IP Address",
+              labelStyle: TextStyle(color: Colors.white),
+              //hintText: "IP Address",
+              // hintStyle: TextStyle(
+              //   decorationColor: Colors.white,
+              //   color: Colors.white,
               // ),
-              style: TextStyle(
-                color: Colors.white,
-              ),
-              onSubmitted: (text) {
-                url = "http://$text/";
-                print("ip address submitted: $text");
-                Navigator.pop(context);
-              }
+              border: OutlineInputBorder(
+                  //borderSide: BorderSide(color: Colors.white),
+                  ),
+              // suffixIcon: IconButton(
+              //   icon: Icon(Icons.send),
+              //   onPressed:
+              // ),
             ),
-          ),
-        )
-      );
+            // keyboardType: TextInputType.numberWithOptions(
+            //   decimal: true,
+            // ),
+            style: TextStyle(
+              color: Colors.white,
+            ),
+            onSubmitted: (text) {
+              url = "http://$text/";
+              print("ip address submitted: $text");
+              Navigator.pop(context);
+            }),
+      ),
+    ));
   }
 }
