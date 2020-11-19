@@ -96,7 +96,6 @@ def turtle(waypoints):
     # Strategy is to first turn to face the target coordinates
     # and then move towards them
     while not rospy.is_shutdown() and current_goal < len(waypoints) and not stop:
-
         # Compute difference between current position and target position
         inc_x = goal.x -x
         inc_y = goal.y -y
@@ -112,19 +111,24 @@ def turtle(waypoints):
             speed.angular.z=0
             speed.linear.x=0
             current_goal+=1
+
             if current_goal < len(waypoints):
                 goal.x=waypoints[current_goal][0]
                 goal.y=waypoints[current_goal][1]
-	elif dist>1:
-	    speed.angular.z = 0
-	    speed.linear.x = 0
-	    goal.x = (x + goal.x)/2
+
+        elif dist>1:
+            speed.angular.z = 0
+            speed.linear.x = 0
+
+            goal.x = (x + goal.x)/2
             goal.y = (x + goal.y)/2
+
         elif abs(angle_change) > 0.10:
             if angle_change > 0:
-		speed.angular.z = 0.60
+		        speed.angular.z = 0.60
             else:
                 speed.angular.z = -0.60
+
         else:
             speed.angular.z = 0.0
             speed.linear.x = 0.30
@@ -156,16 +160,13 @@ class Handler(BaseHTTPRequestHandler):
         if data == "STOP":
             stop = True
         else:
-            stop = False
-            coords = json.loads(data)
+            if (turtle_thread != None) and not turtle_thread.is_alive():
+                turtle_thread = None
 
-            if turtle_thread != None:
-                if not turtle_thread.is_alive():
-                    turtle_thread = None
-                else:
-                    print("Bot already running")
-
-            if not turtle_thread:
+            if turtle_thread == None:
+                stop = False
+                coords = json.loads(data)
+                
                 for c in coords:
                     c[0] += last_coords[0]
                     c[1] += last_coords[1]
