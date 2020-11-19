@@ -5,6 +5,7 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import json
 import threading
 import thread
+import time
 
 PORT = 8080
 
@@ -81,6 +82,7 @@ sub = rospy.Subscriber("/odom", Odometry, newOdom)
 
 # Publish linear and angular velocities to cmd_vel topic
 pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
+reset_odom = rospy.Publisher('/mobile_base/commands/reset_odometry', Empty, queue_size=1)
 
 speed = Twist()
 
@@ -155,7 +157,7 @@ class Handler(BaseHTTPRequestHandler):
         global stop
         global turtle_thread
         global thread_arr
-        
+
         content_length = int(self.headers['Content-Length']) # Size of Data
         data = self.rfile.read(content_length).decode('utf-8') # Data
         if data == "STOP":
@@ -165,6 +167,10 @@ class Handler(BaseHTTPRequestHandler):
                 turtle_thread = None
 
             if turtle_thread == None:
+                end_time = time.time() + 5 #Publish reset for 5 seconds
+                while time.time() < end_time:
+                    reset_odom.publish(Empty())
+
                 stop = False
                 coords = json.loads(data)
 
