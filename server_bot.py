@@ -45,15 +45,16 @@ def obstacle_detection_callback(dt):
     print '-------------------------------------------'
 
     # Thresholds
-    thr1 = 0.3
+    thr1 = 0.25
     thr2 = 0.3
 
     # Checks if obstacles in front and 15 deg left and right
     if not (dt.ranges[0] > thr1 and dt.ranges[15] > thr2 and dt.ranges[345] > thr2):
-        speed.linear.x = 0.0
-        speed.angular.z = 0.0
-        stop = True
-        print("OBSTACLE!!!")
+        if (dt.ranges[0] > 0 and dt.ranges[15] > 0 and dt.ranges[345] > 0):
+            speed.linear.x = 0.0
+            speed.angular.z = 0.0
+            stop = True
+            print("OBSTACLE!!!")
 
     pub.publish(speed)
 
