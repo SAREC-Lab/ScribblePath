@@ -102,6 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _sendStop() async {
+    print('STOP');
     http.post(
       url,
       headers: <String, String>{
