@@ -64,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Offset> screenPts = [];
 
   void _onPanStartHandler(DragStartDetails details) {
-    //_sendLocations(dataPts);
     setState(() {
       Offset screenPt = details.localPosition;
 
@@ -102,12 +101,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _sendStop() async {
+    http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: 'STOP',
+    );
+  }
+
   void _sendLocations(dataPts) async {
     if (dataPts.length == 0) {
       return;
     }
 
-    //String url = 'http://172.16.1.146:8080/';
     print(dataPts);
     http.post(
       url,
@@ -159,6 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 onPressed: () {
                   print("stop pressed");
+                  _sendStop();
                 },
                 // style: RaisedButton.styleFrom(
                 //   primary: Colors.grey[500],
