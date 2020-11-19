@@ -140,7 +140,7 @@ def turtle(waypoints):
     
     speed.angular.z = 0.0
     speed.linear.x = 0.0
-
+    pub.publish(speed)
 
 # Server Class
 class Handler(BaseHTTPRequestHandler):
@@ -166,7 +166,7 @@ class Handler(BaseHTTPRequestHandler):
             if turtle_thread == None:
                 stop = False
                 coords = json.loads(data)
-                
+
                 for c in coords:
                     c[0] += last_coords[0]
                     c[1] += last_coords[1]
