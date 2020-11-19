@@ -79,8 +79,11 @@ class _MyHomePageState extends State<MyHomePage> {
       this.screenPts.add(screenPt);
 
       Offset startPt = screenPts[0];
-      double x = (startPt.dx - screenPt.dx) / scale;
-      double y = (startPt.dy - screenPt.dy) / scale;
+      double x =
+          double.parse(((startPt.dx - screenPt.dx) / scale).toStringAsFixed(5));
+      double y =
+          double.parse(((startPt.dy - screenPt.dy) / scale).toStringAsFixed(5));
+      ;
       Tuple2<double, double> dataPt = Tuple2(x, y);
 
       if (dataPts.isEmpty) {
@@ -153,55 +156,55 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              // ElevatedButton(
-              //   onPressed: () {
-              //     print("stop pressed");
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     primary: Colors.grey[500],
-              //     onPrimary: Colors.grey[400],
-              //     onSurface: Colors.grey[700],
-              //     elevation: 3.0,
-              //   ),
-              //   child: Text(
-              //     "STOP",
-              //     style: TextStyle(color: Colors.black),
-              //   ),
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     print("start pressed");
-              //     _sendLocations(dataPts);
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     primary: Colors.grey[500],
-              //     onPrimary: Colors.grey[400],
-              //     onSurface: Colors.grey[700],
-              //     elevation: 3.0,
-              //   ),
-              //   //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
-              //   child: Text(
-              //     "START",
-              //     style: TextStyle(color: Colors.black),
-              //   ),
-              // ),
-              // ElevatedButton(
-              //   onPressed: () {
-              //     print("reset pressed");
-              //     _reset();
-              //   },
-              //   style: ElevatedButton.styleFrom(
-              //     primary: Colors.grey[500],
-              //     onPrimary: Colors.grey[400],
-              //     onSurface: Colors.grey[700],
-              //     elevation: 3.0,
-              //   ),
-              //   //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
-              //   child: Text(
-              //     "RESET",
-              //     style: TextStyle(color: Colors.black),
-              //   ),
-              // )
+              RaisedButton(
+                onPressed: () {
+                  print("stop pressed");
+                },
+                // style: RaisedButton.styleFrom(
+                //   primary: Colors.grey[500],
+                //   onPrimary: Colors.grey[400],
+                //   onSurface: Colors.grey[700],
+                //   elevation: 3.0,
+                // ),
+                child: Text(
+                  "STOP",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  print("start pressed");
+                  _sendLocations(dataPts);
+                },
+                // style: ElevatedButton.styleFrom(
+                //   primary: Colors.grey[500],
+                //   onPrimary: Colors.grey[400],
+                //   onSurface: Colors.grey[700],
+                //   elevation: 3.0,
+                // ),
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+                child: Text(
+                  "START",
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              RaisedButton(
+                onPressed: () {
+                  print("reset pressed");
+                  _reset();
+                },
+                // style: ElevatedButton.styleFrom(
+                //   primary: Colors.grey[500],
+                //   onPrimary: Colors.grey[400],
+                //   onSurface: Colors.grey[700],
+                //   elevation: 3.0,
+                // ),
+                //style: ElevatedButton.styleFrom(primary: Colors.grey[500]),
+                child: Text(
+                  "RESET",
+                  style: TextStyle(color: Colors.black),
+                ),
+              )
             ],
           )),
     );
