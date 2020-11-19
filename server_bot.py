@@ -125,17 +125,18 @@ def turtle(waypoints):
 		speed.angular.z = 0.60
             else:
                 speed.angular.z = -0.60
-
         else:
             speed.angular.z = 0.0
-
-            rospy.loginfo("Ready to move")
-        
             speed.linear.x = 0.30
-    
+            rospy.loginfo("Ready to move")
+               
         #print("curr: {} length_waypoint: {}".format(current_goal, len(waypoints)))
         pub.publish(speed)
         rate.sleep()
+    
+    speed.angular.z = 0.0
+    speed.linear.x = 0.0
+
 
 # Server Class
 class Handler(BaseHTTPRequestHandler):
@@ -143,9 +144,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-
-    def do_GET(self):
-        pass
 
     def do_POST(self):
         global last_coords
@@ -155,24 +153,27 @@ class Handler(BaseHTTPRequestHandler):
         
         content_length = int(self.headers['Content-Length']) # Size of Data
         data = self.rfile.read(content_length).decode('utf-8') # Data
-        coords = json.loads(data)
+        if data == "STOP":
+            stop = True
+        else:
+            stop = False
+            coords = json.loads(data)
 
-        if turtle_thread != None:
-            if not turtle_thread.is_alive():
-                turtle_thread = None
-            else:
-                print("Bot already running")
+            if turtle_thread != None:
+                if not turtle_thread.is_alive():
+                    turtle_thread = None
+                else:
+                    print("Bot already running")
 
-        if not turtle_thread:
-            for c in coords:
-                c[0] += last_coords[0]
-                c[1] += last_coords[1]
-            
-            turtle_thread = threading.Thread(target = turtle, args = (coords,)) 
-            turtle_thread.start()
-            last_coords = coords[-1]
+            if not turtle_thread:
+                for c in coords:
+                    c[0] += last_coords[0]
+                    c[1] += last_coords[1]
+                
+                turtle_thread = threading.Thread(target = turtle, args = (coords,)) 
+                turtle_thread.start()
+                last_coords = coords[-1]
         
-
         self._set_response()
         self.wfile.write("Recieved".encode('utf-8'))
 
