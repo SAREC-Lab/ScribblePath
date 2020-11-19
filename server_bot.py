@@ -16,6 +16,7 @@ from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import Point, Twist
 from math import atan2, sqrt, pi
 from sensor_msgs.msg import LaserScan
+from std_msgs.msg import Empty
 
 x = 0.0
 y = 0.0 
@@ -69,7 +70,7 @@ pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 10)
 # Subscribe to the odom topic to get information about the current position and velocity
 # of the robot
 sub = rospy.Subscriber("/odom", Odometry, newOdom)
-#sub1 = rospy.Subscriber("/scan", LaserScan, obstacle_detection_callback)
+sub1 = rospy.Subscriber("/scan", LaserScan, obstacle_detection_callback)
 
 speed = Twist()
 
@@ -126,7 +127,7 @@ def turtle(waypoints):
             goal.x = (x + goal.x)/2
             goal.y = (x + goal.y)/2
 
-        elif abs(angle_change) > 0.10:
+        elif abs(angle_change) > 0.15:
             if angle_change > 0:
 		        speed.angular.z = 0.60
             else:
@@ -167,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
                 turtle_thread = None
 
             if turtle_thread == None:
-                end_time = time.time() + 5 #Publish reset for 5 seconds
+                end_time = time.time() + 2 #Publish reset for 5 seconds
                 while time.time() < end_time:
                     reset_odom.publish(Empty())
 
